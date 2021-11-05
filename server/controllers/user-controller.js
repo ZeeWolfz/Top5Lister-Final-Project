@@ -4,15 +4,20 @@ const bcrypt = require('bcryptjs')
 
 getLoggedIn = async (req, res) => {
     auth.verify(req, res, async function () {
-        const loggedInUser = await User.findOne({ _id: req.userId });
-        return res.status(200).json({
-            loggedIn: true,
-            user: {
-                firstName: loggedInUser.firstName,
-                lastName: loggedInUser.lastName,
-                email: loggedInUser.email
-            }
-        }).send();
+        try{
+            const loggedInUser = await User.findOne({ _id: req.userId });
+            return res.status(200).json({
+                loggedIn: true,
+                user: {
+                    firstName: loggedInUser.firstName,
+                    lastName: loggedInUser.lastName,
+                    email: loggedInUser.email
+                }
+            }).send();
+        }catch(err){
+            console.error(err);
+            res.status(500).send();
+        }
     })
 }
 
@@ -78,7 +83,66 @@ registerUser = async (req, res) => {
     }
 }
 
+// part 1
+loginUser = async (req, res) => {
+    try{
+        const { email, password } = req.body;
+        if (!email || !password ) {
+            return res
+                .status(400)
+                .json({ errorMessage: "Please enter all required fields." });
+        }
+        const existingUser = await User.findOne({ email: email });
+        if (!existingUser) {
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    errorMessage: "No account with this email address."
+                })
+        }
+
+        console.log(existingUser)
+        const isValidPassword = bcrypt.compareSync(password, existingUser.passwordHash);
+        if( !isValidPassword ){
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    errorMessage: "The password is incorrect."
+                })
+        }
+
+        console.log(isValidPassword);
+        const token = auth.signToken(existingUser);
+
+        await res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        }).status(200).json({
+            success: true,
+            user: {
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName,
+                email: existingUser.email
+            }
+        }).send();
+
+    
+    }catch (err) {
+        console.error(err);
+        res.status(500).send();
+    }
+}
+
+logoutUser = async (req, res) => {
+
+}
+
 module.exports = {
     getLoggedIn,
-    registerUser
+    registerUser,
+    loginUser,
+    logoutUser
 }
