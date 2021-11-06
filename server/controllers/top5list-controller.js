@@ -1,4 +1,5 @@
 const Top5List = require('../models/top5list-model');
+const User = require('../models/user-model')
 
 createTop5List = (req, res) => {
     const body = req.body;
@@ -108,8 +109,11 @@ getTop5Lists = async (req, res) => {
         return res.status(200).json({ success: true, data: top5Lists })
     }).catch(err => console.log(err))
 }
+
+// part 5
 getTop5ListPairs = async (req, res) => {
-    await Top5List.find({ }, (err, top5Lists) => {
+    const loggedInUser = await User.findOne({ _id: req.userId });
+    await Top5List.find({ ownerEmail: loggedInUser.email}, (err, top5Lists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
