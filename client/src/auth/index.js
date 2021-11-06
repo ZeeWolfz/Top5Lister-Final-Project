@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useHistory } from 'react-router-dom'
-import api from '../api'
+import { useHistory } from 'react-router-dom';
+import api from '../api';
 
 const AuthContext = createContext();
 console.log("create AuthContext: " + AuthContext);
@@ -11,6 +11,7 @@ export const AuthActionType = {
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
     ERROR_MODAL: "ERROR_MODAL",
+    LOGOUT_USER: "LOGOUT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -64,6 +65,15 @@ function AuthContextProvider(props) {
                     
                 })
             }
+            // part 4
+            case AuthActionType.LOGOUT_USER:{
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: payload.loggedIn,
+                    error: auth.error,
+                    message: auth.message
+                })
+            }
 
             default:
                 return auth;
@@ -110,6 +120,25 @@ function AuthContextProvider(props) {
                 message: null
             }
         })
+    }
+
+    // part 4
+    auth.logoutUser = async function(){
+        try{
+            const response = await api.logoutUser();
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGOUT_USER,
+                    payload:{
+                        loggedIn: response.data.loggedIn,
+                        user: response.data.user
+                    }
+                })
+            }
+            history.push("/");
+        }catch(err){
+            console.log(err);
+        }
     }
 
     auth.getLoggedIn = async function () {

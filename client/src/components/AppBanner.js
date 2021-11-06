@@ -80,6 +80,7 @@ export default function AppBanner() {
         }
     }
     
+    // part 3
     function getAccountMenu(loggedIn) {
         if(loggedIn){
             let firstInitial = auth.user.firstName.charAt(0).toUpperCase();

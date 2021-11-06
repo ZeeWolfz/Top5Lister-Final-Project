@@ -140,7 +140,18 @@ loginUser = async (req, res) => {
     }
 }
 
+// part 4
 logoutUser = async (req, res) => {
+    try{
+        await res.clearCookie('token')
+        .status(200).json({
+            loggedIn: false,
+            user: null
+        }).send();
+    }catch(err){
+        console.error(err);
+        res.status(500).send();
+    }
 
 }
 
