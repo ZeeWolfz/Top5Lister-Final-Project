@@ -90,7 +90,10 @@ loginUser = async (req, res) => {
         if (!email || !password ) {
             return res
                 .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+                .json({
+                    success: false,
+                    errorMessage: "Please enter all required fields." 
+                });
         }
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
@@ -98,7 +101,7 @@ loginUser = async (req, res) => {
                 .status(400)
                 .json({
                     success: false,
-                    errorMessage: "No account with this email address."
+                    errorMessage: "No account with this email address exist."
                 })
         }
 
@@ -122,6 +125,7 @@ loginUser = async (req, res) => {
             sameSite: "none"
         }).status(200).json({
             success: true,
+            loggedIn: true,
             user: {
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,

@@ -17,6 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import ErrorModal from "./ErrorModal";
 
 const theme = createTheme();
 
@@ -40,6 +41,7 @@ export default function LoginScreen() {
 
     return (
     <ThemeProvider theme={theme}>
+      <ErrorModal />
         <Grid container component="main" sx={{ height: '100vh' }}>
           <CssBaseline />
           <Grid

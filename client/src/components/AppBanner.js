@@ -81,6 +81,11 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
+        if(loggedIn){
+            let firstInitial = auth.user.firstName.charAt(0).toUpperCase();
+            let lastInitial = auth.user.lastName.charAt(0).toUpperCase();
+            return  (firstInitial + lastInitial);
+        }
         return <AccountCircle />;
     }
 
