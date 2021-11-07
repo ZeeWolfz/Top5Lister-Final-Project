@@ -34,9 +34,7 @@ function ListCard(props) {
 
     function toggleEdit() {
         let newActive = !editActive;
-        if (newActive) {
-            store.setIsListNameEditActive();
-        }
+        store.setIsListNameEditActive(newActive);
         setEditActive(newActive);
     }
 
@@ -58,6 +56,7 @@ function ListCard(props) {
 
     let cardElement =
         <ListItem
+            disabled={store.isListNameEditActive}
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{ marginTop: '15px', display: 'flex', p: 1 }}
@@ -73,14 +72,17 @@ function ListCard(props) {
         >
                 <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
                 <Box sx={{ p: 1 }}>
-                    <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                    <IconButton 
+                    onClick={handleToggleEdit} 
+                    aria-label='edit' 
+                    disabled={store.isListNameEditActive}>
                         <EditIcon style={{fontSize:'48pt'}} />
                     </IconButton>
                 </Box>
                 <Box sx={{ p: 1 }}>
                     <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
+                    }} aria-label='delete' disabled={store.isListNameEditActive}>
                         <DeleteIcon style={{fontSize:'48pt'}} />
                     </IconButton>
                 </Box>

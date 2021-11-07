@@ -43,7 +43,7 @@ export default function DeletionModal(){
 
     return(
         <Modal
-        open={store.listMarkedForDeletion}
+        open={store.listMarkedForDeletion===null? false : true}
         aria-labelledby="deletion-modal-title"
         aria-describedby="deletion-modal-description"
         style={{display:'flex', alginItem:"center", justifyContent:'center'}}
