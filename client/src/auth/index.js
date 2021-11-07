@@ -123,7 +123,7 @@ function AuthContextProvider(props) {
     }
 
     // part 4
-    auth.logoutUser = async function(){
+    auth.logoutUser = async function(store){
         try{
             const response = await api.logoutUser();
             if (response.status === 200) {
@@ -136,6 +136,7 @@ function AuthContextProvider(props) {
                 })
             }
             history.push("/");
+            store.closeCurrentList();
         }catch(err){
             console.log(err);
         }

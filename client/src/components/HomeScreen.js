@@ -14,6 +14,7 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
 
     useEffect(() => {
+        store.closeCurrentList();
         store.loadIdNamePairs();
     }, []);
 
