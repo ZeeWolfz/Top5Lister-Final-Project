@@ -21,7 +21,7 @@ export default function ErrorModal(){
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
-        p: 4
+        p: 4,
         // px: 4,
         // pb: 3
     };
@@ -34,13 +34,15 @@ export default function ErrorModal(){
     return(
         <Modal
         open={auth.error}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="error-modal-title"
+        aria-describedby="error-modal-description"
         style={{display:'flex', alginItem:"center", justifyContent:'center'}}
         >
             <Typography align="center">
                 <Box sx={style}>
-                    <Alert variant="filled" severity="warning">{auth.message}</Alert>
+                    <Alert variant="filled" severity="warning">
+                    <Typography variant="body2" >{auth.message}</Typography>
+                    </Alert>
                     <Typography id="empty-line-error-modal" mt={2}></Typography>
                     <Button 
                     variant="contained"
