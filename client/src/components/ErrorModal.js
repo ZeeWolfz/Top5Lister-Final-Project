@@ -41,7 +41,7 @@ export default function ErrorModal(){
             <Typography align="center">
                 <Box sx={style}>
                     <Alert variant="filled" severity="warning">
-                    <Typography variant="body2" >{auth.message}</Typography>
+                    <Typography variant="body1" >{auth.message}</Typography>
                     </Alert>
                     <Typography id="empty-line-error-modal" mt={2}></Typography>
                     <Button 
