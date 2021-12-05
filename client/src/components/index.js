@@ -5,7 +5,7 @@ import HomeWrapper from './HomeWrapper'
 import ListCard from './ListCard'
 import LoginScreen from './LoginScreen'
 import RegisterScreen from './RegisterScreen'
-import SplashScreen from './SplashScreen'
+import WelcomeScreen from './WelcomeScreen'
 import Statusbar from './Statusbar'
 import Top5Item from './Top5Item'
 import WorkspaceScreen from './WorkspaceScreen'
@@ -23,7 +23,7 @@ export {
     ListCard, 
     LoginScreen,
     RegisterScreen,
-    SplashScreen,
+    WelcomeScreen,
     Statusbar, 
     Top5Item, 
     WorkspaceScreen }

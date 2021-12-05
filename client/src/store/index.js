@@ -208,7 +208,14 @@ function GlobalStoreContextProvider(props) {
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            ownerEmail: auth.user.email,
+            ownerName: auth.user.firstName+" "+auth.user.lastName,
+            view: 0,
+            like: 0,
+            dislike: 0,
+            comments: [["p1", "c1"],["p2", "c2"],["p3", "c3"],["p4", "c4"], ["p5", "c5"]],
+            hasPublished: false,
+            publishDate: new Date(),
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -370,6 +377,8 @@ function GlobalStoreContextProvider(props) {
         return tps.hasTransactionToRedo();
     }
 
+    
+
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setIsListNameEditActive = function (active) {
         storeReducer({
@@ -385,6 +394,22 @@ function GlobalStoreContextProvider(props) {
             payload: active
         });
     }
+
+    //save workspace
+    store.saveWorkspace = function(listName, item1, item2, item3, item4, item5){
+        store.currentList.name = listName;
+        store.currentList.items[0] = item1;
+        store.currentList.items[1] = item2;
+        store.currentList.items[2] = item3;
+        store.currentList.items[3] = item4;
+        store.currentList.items[4] = item5;
+        store.updateCurrentList();
+        store.closeCurrentList();
+    }
+
+    //like list
+
+    //
 
     return (
         <GlobalStoreContext.Provider value={{

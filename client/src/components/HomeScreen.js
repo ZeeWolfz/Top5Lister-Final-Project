@@ -5,6 +5,8 @@ import { Fab, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
 import DeletionModal from "./DeletionModal";
+import NavigationBar from "./NavigationBar";
+import Statusbar from "./Statusbar";
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -18,13 +20,10 @@ const HomeScreen = () => {
         store.loadIdNamePairs();
     }, []);
 
-    function handleCreateNewList() {
-        store.createNewList();
-    }
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
@@ -37,24 +36,14 @@ const HomeScreen = () => {
             </List>;
     }
     return (
-        <div id="top5-list-selector">
-            <div id="list-selector-heading">
-            <Fab 
-                disabled = {store.isListNameEditActive}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
-                <Typography variant="h2">Your Lists</Typography>
-            </div>
-            <div id="list-selector-list">
+        <div id="main-screen">
+            <NavigationBar/>
+            <div id="lists-selector">
                 {
                     listCard
                 }
             </div>
+            <Statusbar />
             <DeletionModal/>
         </div>)
 }
