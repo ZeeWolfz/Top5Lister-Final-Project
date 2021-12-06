@@ -24,10 +24,26 @@ const HomeScreen = () => {
 
     let sortedPairs = "";
     if(store.sortCriteria === "PublishDateNewest"){
-        store.idNamePairs.sort(function(a, b) {return new Date(b.publishDate) - new Date(a.publishDate);});
+        store.idNamePairs.sort(function(a, b) {
+            if(a.publishDate === undefined){
+                return 1;
+            }
+            if(b.publishDate === undefined){
+                return -1;
+            }
+            return new Date(b.publishDate) - new Date(a.publishDate);
+        });
     }
     if(store.sortCriteria === "PublishDateOldest"){
-        store.idNamePairs.sort(function(a, b) {return new Date(a.publishDate) - new Date(b.publishDate);});
+        store.idNamePairs.sort(function(a, b) {
+            if(a.publishDate === undefined){
+                return 1;
+            }
+            if(b.publishDate === undefined){
+                return -1;
+            }
+            return new Date(a.publishDate) - new Date(b.publishDate);
+        });
     }
     if(store.sortCriteria === "Views"){
         store.idNamePairs.sort(function(a, b) {return b.view - a.view;});
