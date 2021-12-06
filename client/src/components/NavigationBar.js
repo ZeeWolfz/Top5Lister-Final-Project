@@ -27,13 +27,39 @@ function NavigationBar() {
         setAnchorEl(null);
     };
 
+    let homeButtonColor = "black";
+    if(auth.currentPage === "homeScreen"){
+        homeButtonColor = "green";
+    }
+
+    let allListButtonColor = "black";
+    if(auth.currentPage === "allListScreen"){
+        allListButtonColor = "green";
+    }
+
+    let userButtonColor = "black";
+    if(auth.currentPage === "userScreen"){
+        userButtonColor = "green";
+    }
+
+    let communityButtonColor = "black";
+    if(auth.currentPage === "communityScreen"){
+        communityButtonColor = "green";
+    }
+
+    function handleChangePage(event, screen){
+        event.preventDefault();
+        auth.changePage(screen);
+    }
+
     let homeButton =
     <IconButton
         id = "home-button"
         size = "large"
         sx = {{mx:1}}
+        onClick={(event)=>{handleChangePage(event, "homeScreen")}}
     >
-        <HomeOutlinedIcon fontSize="large"/>
+        <HomeOutlinedIcon fontSize="large" style={{color: homeButtonColor}}/>
     </IconButton>;
 
     let allListButton =
@@ -41,8 +67,9 @@ function NavigationBar() {
         id = "all-list-button"
         size = "large"
         sx = {{mx:1}}
+        onClick={(event)=>{handleChangePage(event, "allListScreen")}}
     >
-        <GroupsOutlinedIcon fontSize="large"/>
+        <GroupsOutlinedIcon fontSize="large" style={{color: allListButtonColor}}/>
     </IconButton>;
 
     let userButton =
@@ -50,8 +77,9 @@ function NavigationBar() {
         id = "user-button"
         size = "large"
         sx = {{mx:1}}
+        onClick={(event)=>{handleChangePage(event, "userScreen")}}
     >
-        <PersonOutlineOutlinedIcon fontSize="large"/>
+        <PersonOutlineOutlinedIcon fontSize="large" style={{color: userButtonColor}}/>
     </IconButton>;
 
     let communityButton =
@@ -59,8 +87,9 @@ function NavigationBar() {
         id = "community-button"
         size = "large"
         sx = {{mx:1}}
+        onClick={(event)=>{handleChangePage(event, "communityScreen")}}
     >
-        <FunctionsOutlinedIcon fontSize="large"/>
+        <FunctionsOutlinedIcon fontSize="large" style={{color: communityButtonColor}}/>
     </IconButton>;
 
     let searchBar = 

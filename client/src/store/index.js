@@ -26,7 +26,8 @@ export const GlobalStoreActionType = {
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
+    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    LIKE_LIST:"LIKE_LIST",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -153,6 +154,16 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 });
             }
+            case GlobalStoreActionType.LIKE_LIST: {
+                return setStore({
+                    idNamePairs: payload.idNamePairs,
+                    currentList: null, //payload.top5List,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
             default:
                 return store;
         }
@@ -213,9 +224,10 @@ function GlobalStoreContextProvider(props) {
             view: 0,
             like: 0,
             dislike: 0,
-            comments: [["p1", "c1"],["p2", "c2"],["p3", "c3"],["p4", "c4"], ["p5", "c5"]],
+            likeList:[],
+            dislikeList:[],
+            comments: [],
             hasPublished: false,
-            publishDate: new Date(),
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -407,9 +419,166 @@ function GlobalStoreContextProvider(props) {
         store.closeCurrentList();
     }
 
-    //like list
+    //publish list
+    store.publishList = function(listName, item1, item2, item3, item4, item5){
+        store.currentList.name = listName;
+        store.currentList.items[0] = item1;
+        store.currentList.items[1] = item2;
+        store.currentList.items[2] = item3;
+        store.currentList.items[3] = item4;
+        store.currentList.items[4] = item5;
+        store.currentList.hasPublished = true;
+        let date = new Date();
+        store.currentList.publishDate = date;
+        store.currentList.publishDateString = date.toLocaleString('default', { month: 'short' })+" "+date.getDate()+", "+date.getFullYear();
+        store.updateCurrentList();
+        store.closeCurrentList();
+    }
 
-    //
+    //post comment
+    store.postComment = async function(id, comment){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.comments.unshift(comment);
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+
+    //increase view
+    store.increaseListView = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.view = top5List.view+1;
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+
+    //like list
+    store.likeList = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.like = top5List.like+1;
+            top5List.likeList.push(auth.user.email);
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+    //unlike list
+    store.unlikeList = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.like = top5List.like-1;
+            let index = top5List.likeList.indexOf(auth.user.email);
+            if(index>-1){
+                top5List.likeList.splice(index, 1);
+            }
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+
+    //dislike list
+    store.dislikeList = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.dislike = top5List.dislike+1;
+            top5List.dislikeList.push(auth.user.email);
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+
+    store.undislikeList = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.dislike = top5List.dislike-1;
+            let index = top5List.dislikeList.indexOf(auth.user.email)
+            if(index>-1){
+                top5List.dislikeList.splice(index, 1);
+            }
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+
+    store.likeAndUndislike = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.like = top5List.like+1;
+            top5List.likeList.push(auth.user.email);
+            top5List.dislike = top5List.dislike-1;
+            let index = top5List.dislikeList.indexOf(auth.user.email)
+            if(index>-1){
+                top5List.dislikeList.splice(index, 1);
+            }
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
+    store.dislikeAndUnlike = async function(id){
+        let response = await api.getTop5ListById(id);
+        if (response.data.success) {
+            let top5List = response.data.top5List;
+            top5List.dislike = top5List.dislike+1;
+            top5List.dislikeList.push(auth.user.email);
+            top5List.like = top5List.like-1;
+            let index = top5List.likeList.indexOf(auth.user.email);
+            if(index>-1){
+                top5List.likeList.splice(index, 1);
+            }
+            async function updateList(top5List) {
+                response = await api.updateTop5ListById(top5List._id, top5List);
+                if (response.data.success) {
+                    store.loadIdNamePairs();
+                }
+            }
+            updateList(top5List);
+        }
+    }
 
     return (
         <GlobalStoreContext.Provider value={{

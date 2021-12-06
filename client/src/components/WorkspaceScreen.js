@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Top5Item from './Top5Item.js'
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
@@ -17,6 +17,7 @@ import Statusbar from "./Statusbar";
 */
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
+    const [wantPublish, setWantPublish] = useState(false);
 
     useEffect(() => {
         let url = window.location.href;
@@ -35,8 +36,23 @@ function WorkspaceScreen() {
         let item4 = formData.get('item-4-name');
         let item5 = formData.get('item-5-name');
 
-        store.saveWorkspace(listName, item1, item2, item3, item4, item5);
+        if(wantPublish){
+            store.publishList(listName, item1, item2, item3, item4, item5)
+        }
+        else{
+            store.saveWorkspace(listName, item1, item2, item3, item4, item5);
+        }
     };
+
+    function handleTogglePublish(event){
+        event.stopPropagation();
+        togglePublish();
+    }
+    function togglePublish() {
+        let newPublish = true;
+        //store.setIsListNameEditActive(newActive);
+        setWantPublish(newPublish);
+    }
 
     let listForm = "";
     if (store.currentList) {
@@ -143,6 +159,7 @@ function WorkspaceScreen() {
                             id='publish-button'
                             fullWidth
                             variant="contained"
+                            onClick={handleTogglePublish}
                             sx={{ my: 3, mx: 1 }}
                             style={{maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"#111111"}}
                         >

@@ -7,6 +7,7 @@ import List from '@mui/material/List';
 import DeletionModal from "./DeletionModal";
 import NavigationBar from "./NavigationBar";
 import Statusbar from "./Statusbar";
+import AuthContext from '../auth'
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -14,6 +15,7 @@ import Statusbar from "./Statusbar";
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
 
     useEffect(() => {
         store.closeCurrentList();

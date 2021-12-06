@@ -61,8 +61,17 @@ updateTop5List = async (req, res) => {
                 });
             }
     
-            top5List.name = body.name
-            top5List.items = body.items
+            top5List.name = body.name;
+            top5List.items = body.items;
+            top5List.view = body.view;
+            top5List.like= body.like
+            top5List.dislike= body.dislike;
+            top5List.likeList= body.likeList
+            top5List.dislikeList= body.dislikeList;
+            top5List.comments= body.comments;
+            top5List.hasPublished= body.hasPublished;
+            top5List.publishDate= body.publishDate;
+            top5List.publishDateString = body.publishDateString;
             top5List
                 .save()
                 .then(() => {
@@ -179,9 +188,12 @@ getTop5ListPairs = async (req, res) => {
                         view: list.view,
                         like: list.like,
                         dislike: list.dislike,
+                        likeList: list.likeList,
+                        dislikeList: list.dislikeList,
                         comments: list.comments,
                         hasPublished: list.hasPublished,
-                        publishDate: list.publishDate
+                        publishDate: list.publishDate,
+                        publishDateString: list.publishDateString,
                     };
                     pairs.push(pair);
                 }

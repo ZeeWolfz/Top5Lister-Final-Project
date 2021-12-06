@@ -11,7 +11,8 @@ export const AuthActionType = {
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
     ERROR_MODAL: "ERROR_MODAL",
-    LOGOUT_USER: "LOGOUT_USER"
+    LOGOUT_USER: "LOGOUT_USER",
+    CHANGE_PAGE: "CHANGE_PAGE",
 }
 
 function AuthContextProvider(props) {
@@ -19,7 +20,8 @@ function AuthContextProvider(props) {
         user: null,
         loggedIn: false,
         error: false,
-        message: ""
+        message: "",
+        currentPage: "weclomeScreen"
     });
     const history = useHistory();
 
@@ -35,7 +37,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     error: auth.error,
-                    message: auth.message
+                    message: auth.message,
+                    currentPage: auth.currentPage,
                 });
             }
             case AuthActionType.REGISTER_USER: {
@@ -43,7 +46,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: true,
                     error: auth.error,
-                    message: auth.message
+                    message: auth.message,
+                    currentPage: "homeScreen"
                 })
             }
             // part 1
@@ -52,7 +56,8 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     error: auth.error,
-                    message: auth.message
+                    message: auth.message,
+                    currentPage: "homeScreen"
                 })
             }
             // part 2
@@ -62,7 +67,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     error: payload.error,
                     message: payload.message,
-                    
+                    currentPage: auth.currentPage
                 })
             }
             // part 4
@@ -71,13 +76,36 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     error: auth.error,
-                    message: auth.message
+                    message: auth.message,
+                    currentPage: "welcomeScreen"
                 })
             }
+
+            // change page screen
+            case AuthActionType.CHANGE_PAGE:{
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    error: auth.error,
+                    message: auth.message,
+                    currentPage: payload.page,
+                })
+            }
+
 
             default:
                 return auth;
         }
+    }
+
+    //change page screen depending on the navigation button
+    auth.changePage = function (screen){
+        authReducer({
+            type: AuthActionType.CHANGE_PAGE,
+            payload:{
+                page: screen,
+            }
+        })
     }
 
     // part 1
