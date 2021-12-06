@@ -33,6 +33,15 @@ const HomeScreen = () => {
             }
             return new Date(b.publishDate) - new Date(a.publishDate);
         });
+        store.communityLists.sort(function(a, b) {
+            if(a.updateDate === undefined){
+                return 1;
+            }
+            if(b.updateDate === undefined){
+                return -1;
+            }
+            return new Date(b.updateDate) - new Date(a.updateDate);
+        });
     }
     if(store.sortCriteria === "PublishDateOldest"){
         store.idNamePairs.sort(function(a, b) {
@@ -44,19 +53,31 @@ const HomeScreen = () => {
             }
             return new Date(a.publishDate) - new Date(b.publishDate);
         });
+        store.communityLists.sort(function(a, b) {
+            if(a.updateDate === undefined){
+                return 1;
+            }
+            if(b.updateDate === undefined){
+                return -1;
+            }
+            return new Date(a.updateDate) - new Date(b.updateDate);
+        });
     }
     if(store.sortCriteria === "Views"){
         store.idNamePairs.sort(function(a, b) {return b.view - a.view;});
+        store.communityLists.sort(function(a, b) {return b.view - a.view;});
     }
     if(store.sortCriteria === "Likes"){
         store.idNamePairs.sort(function(a, b) {return b.like - a.like;});
+        store.communityLists.sort(function(a, b) {return b.like - a.like;});
     }
     if(store.sortCriteria === "Dislikes"){
         store.idNamePairs.sort(function(a, b) {return b.dislike - a.dislike;});
+        store.communityLists.sort(function(a, b) {return b.dislike - a.dislike;});
     }
 
     let listCard = "";
-    if (auth.currentScreen==="homeScreen" || auth.currentScreen==="allListScreen") {
+    if (auth.currentScreen==="homeScreen") {
         const filteredPairs = store.idNamePairs.filter(pair => pair.name.toUpperCase().startsWith(store.searchCriteria.toUpperCase()));
         listCard = 
             <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
@@ -71,6 +92,39 @@ const HomeScreen = () => {
             }
             </List>;
     }
+    else if (auth.currentScreen==="allListScreen"){
+        if(store.searchCriteria===""){
+            const filteredPairs = store.idNamePairs;
+            listCard = 
+                <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
+                {
+                    filteredPairs.map((pair) => (
+                        
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                        />
+                    ))
+                }
+                </List>; 
+        }
+        else{
+            const filteredPairs = store.idNamePairs.filter(pair => pair.name.toUpperCase() === store.searchCriteria.toUpperCase());
+            listCard = 
+                <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
+                {
+                    filteredPairs.map((pair) => (
+                        <ListCard
+                            key={pair._id}
+                            idNamePair={pair}
+                            selected={false}
+                        />
+                    ))
+                }
+                </List>;
+            }
+    }
     else if (auth.currentScreen==="userScreen"){
         const filteredPairs = store.idNamePairs.filter(pair => pair.ownerName.toUpperCase() === store.searchCriteria.toUpperCase());
         listCard = 
@@ -78,6 +132,21 @@ const HomeScreen = () => {
             {
                 filteredPairs.map((pair) => (
                     
+                    <ListCard
+                        key={pair._id}
+                        idNamePair={pair}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
+    }
+    else if(auth.currentScreen==="communityScreen"){
+        const filteredPairs = store.communityLists.filter(pair => pair.name.toUpperCase().startsWith(store.searchCriteria.toUpperCase()));
+        listCard = 
+            <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
+            {
+                filteredPairs.map((pair) => (
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}

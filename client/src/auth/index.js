@@ -12,6 +12,8 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     ERROR_MODAL: "ERROR_MODAL",
     LOGOUT_USER: "LOGOUT_USER",
+    CONTINUE_AS_GUEST: "CONTINUE_AS_GUEST",
+    EXIST_GUEST: "EXIST_GUEST",
     CHANGE_SCREEN: "CHANGE_SCREEN",
 }
 
@@ -21,6 +23,7 @@ function AuthContextProvider(props) {
         loggedIn: false,
         error: false,
         message: "",
+        guest: false,
         currentScreen: "welcomeScreen",
     });
     const history = useHistory();
@@ -38,6 +41,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
+                    guest: auth.guest,
                     currentScreen: auth.currentScreen,
                 });
             }
@@ -47,6 +51,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     error: auth.error,
                     message: auth.message,
+                    guest: auth.guest,
                     currentScreen: "weclomeScreen",
                 })
             }
@@ -57,6 +62,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
+                    guest: auth.guest,
                     currentScreen: "homeScreen",
                 })
             }
@@ -67,6 +73,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     error: payload.error,
                     message: payload.message,
+                    guest: auth.guest,
                     currentScreen: auth.currentScreen,
                 })
             }
@@ -77,6 +84,30 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
+                    guest: false,
+                    currentScreen: "welcomeScreen",
+                })
+            }
+
+            //
+            case AuthActionType.CONTINUE_AS_GUEST:{
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: false,
+                    error: auth.error,
+                    message: auth.message,
+                    guest: true,
+                    currentScreen: "communityScreen",
+                })
+            }
+
+            case AuthActionType.EXIST_GUEST:{
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: false,
+                    error: auth.error,
+                    message: auth.message,
+                    guest: false,
                     currentScreen: "welcomeScreen",
                 })
             }
@@ -88,6 +119,7 @@ function AuthContextProvider(props) {
                     loggedIn: auth.loggedIn,
                     error: auth.error,
                     message: auth.message,
+                    guest: auth.guest,
                     currentScreen: payload.screen,
                 })
             }
@@ -105,11 +137,27 @@ function AuthContextProvider(props) {
                 screen: screen,
             }
         })
-        store.loadIdNamePairs({screen: screen})
-        console.log(store.searchCriteria);
+        store.loadIdNamePairs({screen: screen});
     }
 
+    auth.continueAsGuest = function (store){
+        authReducer({
+            type: AuthActionType.CONTINUE_AS_GUEST,
+            payload:{
+            }
+        })
+        store.loadIdNamePairs({screen:"communityScreen"});
+        history.push("/");
+    }
 
+    auth.existGuest = function (){
+        authReducer({
+            type: AuthActionType.EXIST_GUEST,
+            payload:{
+            }
+        })
+
+    }
 
     // part 1
     auth.loginUser = async function (userData, store){

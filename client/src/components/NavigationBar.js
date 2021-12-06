@@ -70,54 +70,85 @@ function NavigationBar() {
         console.log(store.sortCriteria);
     }
 
-
+    let homeButtonStyle = {fontSize:35, color: "black"};
+    if(auth.currentScreen === "homeScreen"){
+        homeButtonStyle = {borderStyle:"solid", borderColor:"green", color: "black", fontSize:35};
+    }
+    if(auth.guest || store.currentList){
+        homeButtonStyle = {fontSize:35, color: "gray"};
+    }
     let homeButton =
     <Button
-        disabled = {store.currentList}
+        disabled = {store.currentList || auth.guest}
         id = "home-button"
         sx = {{mx:1}}
         onClick={(event)=>{handleChangeScreen(event, "homeScreen")}}
     >
         <HomeOutlinedIcon 
-        style={(auth.currentScreen === "homeScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        style={homeButtonStyle}
         />
     </Button>;
 
+    let allListButtonStyle = {fontSize:35, color: "black"};
+    if(auth.currentScreen === "allListScreen"){
+        allListButtonStyle = {borderStyle:"solid", borderColor:"green", color: "black", fontSize:35};
+    }
+    if(store.currentList){
+        allListButtonStyle = {fontSize:35, color: "gray"};
+    }
     let allListButton =
     <Button
+        disabled = {store.currentList}
         id = "all-list-button"
         sx = {{mx:1}}
         onClick={(event)=>{handleChangeScreen(event, "allListScreen")}}
     >
         <GroupsOutlinedIcon 
-        style={(auth.currentScreen === "allListScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        style={allListButtonStyle}
         />
     </Button>;
 
+    let userButtonStyle = {fontSize:35, color: "black"};
+    if(auth.currentScreen === "userScreen"){
+        userButtonStyle = {borderStyle:"solid", borderColor:"green", color: "black", fontSize:35};
+    }
+    if(store.currentList){
+        userButtonStyle = {fontSize:35, color: "gray"};
+    }
     let userButton =
     <Button
+        disabled = {store.currentList}
         id = "user-button"
         sx = {{mx:1}}
         onClick={(event)=>{handleChangeScreen(event, "userScreen")}}
     >
         <PersonOutlineOutlinedIcon 
-        style={(auth.currentScreen === "userScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        style={userButtonStyle}
         />
     </Button>;
 
+    let communityButtonStyle = {fontSize:35, color: "black"};
+    if(auth.currentScreen === "communityScreen"){
+        communityButtonStyle = {borderStyle:"solid", borderColor:"green", color: "black", fontSize:35};
+    }
+    if(store.currentList){
+        communityButtonStyle = {fontSize:35, color: "gray"};
+    }
     let communityButton =
     <Button
+        disabled = {store.currentList}
         id = "community-button"
         sx = {{mx:1}}
         onClick={(event)=>{handleChangeScreen(event, "communityScreen")}}
     >
         <FunctionsOutlinedIcon 
-        style={(auth.currentScreen === "communityScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        style={communityButtonStyle}
         />
     </Button>;
 
     let searchBar = 
-    <TextField id="search-bar" label="Search" variant="filled" style={{width:500}} sx = {{mx:3}} onKeyPress={handleSearch}/>;
+    <TextField disabled = {store.currentList}
+    id="search-bar" label="Search" variant="filled" style={{width:500}} sx = {{mx:3}} onKeyPress={handleSearch}/>;
 
     const sortMenu = (
         <Menu
@@ -144,17 +175,18 @@ function NavigationBar() {
     );
 
     let sortText = 
-        <Typography id = "sort-text" style={{fontSize: 20, fontWeight: "bold", mt:3}}>
+        <Typography id = "sort-text" style={(store.currentList)?{fontSize: 20, fontWeight: "bold", mt:3, color:"gray"}:{fontSize: 20, fontWeight: "bold", mt:3}}>
             Sort By
         </Typography>;
     let sortButton = 
         <Button 
+            disabled = {store.currentList}
             id = "sort-button" 
             sx = {{ml:23}}
             onClick = {handleSortMenuOpen}
         >
             <SortOutlinedIcon 
-            style={{fontSize:35, color: "black"}}
+            style={(store.currentList)?{fontSize:35, color: "gray"}: {fontSize:35, color: "black"}}
             />
         </Button>;
 

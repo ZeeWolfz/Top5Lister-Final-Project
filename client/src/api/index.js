@@ -34,6 +34,12 @@ export const registerUser = (payload) => api.post(`/register/`, payload)
 export const loginUser = (payload) => api.post(`/login/`, payload)
 export const logoutUser = () => api.get(`/logout/`)
 
+export const createCommunityList = (payload) => api.post(`/communitylist/`, payload)
+export const getCommunityListPairs = (query) => api.get(`/communitylistpairs/`, {params:query})
+export const getCommunityListById = (id) => api.get(`/communitylist/${id}`)
+
+export const updateCommunityListById = (id, payload) => api.put(`/communitylist/${id}`, payload)
+
 const apis = {
     createTop5List,
     getAllTop5Lists,
@@ -45,7 +51,12 @@ const apis = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+
+    createCommunityList,
+    getCommunityListPairs,
+    getCommunityListById,
+    updateCommunityListById,
 }
 
 export default apis

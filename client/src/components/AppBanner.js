@@ -32,7 +32,34 @@ export default function AppBanner() {
         auth.logoutUser(store);
     }
 
+    const handleExist = () =>{
+        handleMenuClose();
+        auth.existGuest();
+    }
+
     const menuId = 'primary-search-account-menu';
+    const guestMenu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
+            <MenuItem onClick={handleExist}><Link to='/'>Exit</Link></MenuItem>
+        </Menu>
+    );
+
     const loggedOutMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -77,6 +104,9 @@ export default function AppBanner() {
     let menu = loggedOutMenu;
     if (auth.loggedIn) {
         menu = loggedInMenu;
+    }
+    if(auth.guest){
+        menu = guestMenu;
     }
     
     // part 3

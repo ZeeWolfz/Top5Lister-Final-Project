@@ -14,11 +14,15 @@ function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
     let text ="Your Lists";
-    let addButtonColor = "black";
-    if (store.currentList){
-        text = store.currentList.name;
-        addButtonColor = "#C4C4C4";
-    }
+    let addButton = 
+        <IconButton
+            disabled = {store.currentList|| auth.currentScreen !== "homeScreen"}
+            id = "add-list-button"
+            size = "large"
+            onClick = {handleCreateNewList}
+        >
+            <AddIcon fontSize="large" style={(store.currentList)? {color:"gray"} : {color: "black"}}/>
+        </IconButton>;
 
     if (auth.currentScreen !== "homeScreen"){
         if(store.searchCriteria !== ""){
@@ -32,7 +36,7 @@ function Statusbar() {
                 text = "User Lists"
             }
         }
-        addButtonColor = "#C4C4C4";
+        addButton = "";
     }
 
     if (auth.currentScreen === "communityScreen"){
@@ -43,22 +47,10 @@ function Statusbar() {
         store.createNewList();
     }
 
-    let addButton = 
-        <IconButton
-            disabled = {store.currentList|| auth.currentScreen !== "homeScreen"}
-            id = "add-list-button"
-            size = "large"
-            onClick = {handleCreateNewList}
-        >
-            <AddIcon fontSize="large" style={{color: addButtonColor}}/>
-        </IconButton>;
-
-    
-
     return (
         <div id="top5-statusbar"> 
         {addButton}
-        <Typography variant="h4">{text}</Typography> 
+        <Typography variant="h4" style={(store.currentList)? {color:"gray"} : {color:"black"}}>{text}</Typography> 
         </div>
     );
 }
