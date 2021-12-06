@@ -77,9 +77,6 @@ export default function AppBanner() {
     let menu = loggedOutMenu;
     if (auth.loggedIn) {
         menu = loggedInMenu;
-        if (store.currentList) {
-            editToolbar = <EditToolbar />;
-        }
     }
     
     // part 3
@@ -87,7 +84,13 @@ export default function AppBanner() {
         if(loggedIn){
             let firstInitial = auth.user.firstName.charAt(0).toUpperCase();
             let lastInitial = auth.user.lastName.charAt(0).toUpperCase();
-            return  <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>{firstInitial + lastInitial}</Avatar>;
+            return  <Avatar sx={{ m: 1, bgcolor: 'secondary.main', 
+                    borderStyle: 'solid', borderColor: 'black', 
+                    color:'wihte',fontSize:20, fontWeight:'normal',
+                    width: 50, height: 50 }}
+                    >
+                        {firstInitial + lastInitial}
+                    </Avatar>;
         }
         return <AccountCircleOutlinedIcon />;
     }

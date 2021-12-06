@@ -110,7 +110,7 @@ body {
   flex-direction: column;
   overflow: scroll;
 }
-#home-button{
+/* #home-button{
   color:#111111;
 }
 #all-list-button{
@@ -121,10 +121,10 @@ body {
 }
 #community-button{
   color:#111111;
-}
-#add-list-button {
+} */
+/* #add-list-button {
   color:#111111;
-}
+} */
 #search-bar{
   background-color: white;
 }
@@ -145,17 +145,17 @@ body {
 }
 #sort-text{
   position: absolute;
-  top: 20%;
+  top: 30%;
   right: 15%;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 25px;
   color:#111111;
 }
-#sort-button{
+/* #sort-button{
   position: absolute;
   right: 10%;
   color:#111111;
-}
+} */
 
 #edit-toolbar {
   background-color: transparent;

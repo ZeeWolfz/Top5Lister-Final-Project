@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import  AuthContext  from '../auth';
 import { GlobalStoreContext } from '../store'
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
@@ -12,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function NavigationBar() {
     const { store } = useContext(GlobalStoreContext);
@@ -27,73 +28,96 @@ function NavigationBar() {
         setAnchorEl(null);
     };
 
-    let homeButtonColor = "black";
-    if(auth.currentPage === "homeScreen"){
-        homeButtonColor = "green";
-    }
-
-    let allListButtonColor = "black";
-    if(auth.currentPage === "allListScreen"){
-        allListButtonColor = "green";
-    }
-
-    let userButtonColor = "black";
-    if(auth.currentPage === "userScreen"){
-        userButtonColor = "green";
-    }
-
-    let communityButtonColor = "black";
-    if(auth.currentPage === "communityScreen"){
-        communityButtonColor = "green";
-    }
-
-    function handleChangePage(event, screen){
+    function handleChangeScreen(event, screen){
         event.preventDefault();
-        auth.changePage(screen);
+        auth.changeScreen(screen, store);
+        store.loadIdNamePairs({screen:screen})
     }
+
+    function handleSearch(event){
+        if(event.code === "Enter"){
+            store.searchList(event.target.value);
+        }
+    }
+
+    function handleSortPublishDateNewest(){
+        store.sortList("PublishDateNewest");
+        handleMenuClose();
+        console.log(store.sortCriteria);
+    }
+
+    function handleSortPublishDateOldest(){
+        store.sortList("PublishDateOldest");
+        handleMenuClose();
+        console.log(store.sortCriteria);
+    }
+
+    function handleSortViews(){
+        store.sortList("Views");
+        handleMenuClose();
+        console.log(store.sortCriteria);
+    }
+
+    function handleSortLikes(){
+        store.sortList("Likes");
+        handleMenuClose();
+        console.log(store.sortCriteria);
+    }
+
+    function handleSortDisikes(){
+        store.sortList("Dislikes");
+        handleMenuClose();
+        console.log(store.sortCriteria);
+    }
+
 
     let homeButton =
-    <IconButton
+    <Button
+        disabled = {store.currentList}
         id = "home-button"
-        size = "large"
         sx = {{mx:1}}
-        onClick={(event)=>{handleChangePage(event, "homeScreen")}}
+        onClick={(event)=>{handleChangeScreen(event, "homeScreen")}}
     >
-        <HomeOutlinedIcon fontSize="large" style={{color: homeButtonColor}}/>
-    </IconButton>;
+        <HomeOutlinedIcon 
+        style={(auth.currentScreen === "homeScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        />
+    </Button>;
 
     let allListButton =
-    <IconButton
+    <Button
         id = "all-list-button"
-        size = "large"
         sx = {{mx:1}}
-        onClick={(event)=>{handleChangePage(event, "allListScreen")}}
+        onClick={(event)=>{handleChangeScreen(event, "allListScreen")}}
     >
-        <GroupsOutlinedIcon fontSize="large" style={{color: allListButtonColor}}/>
-    </IconButton>;
+        <GroupsOutlinedIcon 
+        style={(auth.currentScreen === "allListScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        />
+    </Button>;
 
     let userButton =
-    <IconButton
+    <Button
         id = "user-button"
-        size = "large"
         sx = {{mx:1}}
-        onClick={(event)=>{handleChangePage(event, "userScreen")}}
+        onClick={(event)=>{handleChangeScreen(event, "userScreen")}}
     >
-        <PersonOutlineOutlinedIcon fontSize="large" style={{color: userButtonColor}}/>
-    </IconButton>;
+        <PersonOutlineOutlinedIcon 
+        style={(auth.currentScreen === "userScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        />
+    </Button>;
 
     let communityButton =
-    <IconButton
+    <Button
         id = "community-button"
-        size = "large"
         sx = {{mx:1}}
-        onClick={(event)=>{handleChangePage(event, "communityScreen")}}
+        onClick={(event)=>{handleChangeScreen(event, "communityScreen")}}
     >
-        <FunctionsOutlinedIcon fontSize="large" style={{color: communityButtonColor}}/>
-    </IconButton>;
+        <FunctionsOutlinedIcon 
+        style={(auth.currentScreen === "communityScreen")?{borderStyle:"solid", borderColor:"green", color: "black", fontSize:35}:{fontSize:35, color: "black"}}
+        />
+    </Button>;
 
     let searchBar = 
-    <TextField id="search-bar" label="Search" variant="filled" style={{width:500}} sx = {{mx:3}} />;
+    <TextField id="search-bar" label="Search" variant="filled" style={{width:500}} sx = {{mx:3}} onKeyPress={handleSearch}/>;
 
     const sortMenu = (
         <Menu
@@ -111,27 +135,28 @@ function NavigationBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Publish Date (Newest)</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Publish Date (Oldest)</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Views</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Likes</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Dislikes</MenuItem>
+            <MenuItem onClick={handleSortPublishDateNewest}>Publish Date (Newest)</MenuItem>
+            <MenuItem onClick={handleSortPublishDateOldest}>Publish Date (Oldest)</MenuItem>
+            <MenuItem onClick={handleSortViews}>Views</MenuItem>
+            <MenuItem onClick={handleSortLikes}>Likes</MenuItem>
+            <MenuItem onClick={handleSortDisikes}>Dislikes</MenuItem>
         </Menu>
     );
 
     let sortText = 
-        <Typography id = "sort-text">
+        <Typography id = "sort-text" style={{fontSize: 20, fontWeight: "bold", mt:3}}>
             Sort By
         </Typography>;
     let sortButton = 
-        <IconButton 
+        <Button 
             id = "sort-button" 
-            size = "large" 
-            align='right'
+            sx = {{ml:23}}
             onClick = {handleSortMenuOpen}
         >
-            <SortOutlinedIcon fontSize="large"/>
-        </IconButton>;
+            <SortOutlinedIcon 
+            style={{fontSize:35, color: "black"}}
+            />
+        </Button>;
 
 
 
@@ -141,7 +166,7 @@ function NavigationBar() {
 
 
     let navigationBar =
-        <div id="navigation-bar">
+        <Box id="navigation-bar" disabled={store.currentList}>
             {homeButton}
             {allListButton}
             {userButton}
@@ -150,7 +175,7 @@ function NavigationBar() {
             {sortText}
             {sortButton}
             {sortMenu}
-        </div>;
+        </Box>;
         
 
     return (navigationBar);

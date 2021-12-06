@@ -19,15 +19,49 @@ const HomeScreen = () => {
 
     useEffect(() => {
         store.closeCurrentList();
-        store.loadIdNamePairs();
+        store.loadIdNamePairs({screen:auth.currentScreen});
     }, []);
 
+    let sortedPairs = "";
+    if(store.sortCriteria === "PublishDateNewest"){
+        store.idNamePairs.sort(function(a, b) {return new Date(b.publishDate) - new Date(a.publishDate);});
+    }
+    if(store.sortCriteria === "PublishDateOldest"){
+        store.idNamePairs.sort(function(a, b) {return new Date(a.publishDate) - new Date(b.publishDate);});
+    }
+    if(store.sortCriteria === "Views"){
+        store.idNamePairs.sort(function(a, b) {return b.view - a.view;});
+    }
+    if(store.sortCriteria === "Likes"){
+        store.idNamePairs.sort(function(a, b) {return b.like - a.like;});
+    }
+    if(store.sortCriteria === "Dislikes"){
+        store.idNamePairs.sort(function(a, b) {return b.dislike - a.dislike;});
+    }
+
     let listCard = "";
-    if (store) {
+    if (auth.currentScreen==="homeScreen" || auth.currentScreen==="allListScreen") {
+        const filteredPairs = store.idNamePairs.filter(pair => pair.name.toUpperCase().startsWith(store.searchCriteria.toUpperCase()));
         listCard = 
             <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
             {
-                store.idNamePairs.map((pair) => (
+                filteredPairs.map((pair) => (
+                    <ListCard
+                        key={pair._id}
+                        idNamePair={pair}
+                        selected={false}
+                    />
+                ))
+            }
+            </List>;
+    }
+    else if (auth.currentScreen==="userScreen"){
+        const filteredPairs = store.idNamePairs.filter(pair => pair.ownerName.toUpperCase() === store.searchCriteria.toUpperCase());
+        listCard = 
+            <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
+            {
+                filteredPairs.map((pair) => (
+                    
                     <ListCard
                         key={pair._id}
                         idNamePair={pair}

@@ -14,8 +14,29 @@ function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
     let text ="Your Lists";
+    let addButtonColor = "black";
     if (store.currentList){
         text = store.currentList.name;
+        addButtonColor = "#C4C4C4";
+    }
+
+    if (auth.currentScreen !== "homeScreen"){
+        if(store.searchCriteria !== ""){
+            text = store.searchCriteria + " Lists";
+        }
+        else{
+            if(auth.currentScreen === "allListScreen"){
+                text = "All Lists"
+            }
+            if(auth.currentScreen === "userScreen"){
+                text = "User Lists"
+            }
+        }
+        addButtonColor = "#C4C4C4";
+    }
+
+    if (auth.currentScreen === "communityScreen"){
+        text = "Community Lists";
     }
 
     function handleCreateNewList() {
@@ -24,11 +45,12 @@ function Statusbar() {
 
     let addButton = 
         <IconButton
+            disabled = {store.currentList|| auth.currentScreen !== "homeScreen"}
             id = "add-list-button"
             size = "large"
             onClick = {handleCreateNewList}
         >
-            <AddIcon fontSize="large"/>
+            <AddIcon fontSize="large" style={{color: addButtonColor}}/>
         </IconButton>;
 
     

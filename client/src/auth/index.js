@@ -12,7 +12,7 @@ export const AuthActionType = {
     LOGIN_USER: "LOGIN_USER",
     ERROR_MODAL: "ERROR_MODAL",
     LOGOUT_USER: "LOGOUT_USER",
-    CHANGE_PAGE: "CHANGE_PAGE",
+    CHANGE_SCREEN: "CHANGE_SCREEN",
 }
 
 function AuthContextProvider(props) {
@@ -21,7 +21,7 @@ function AuthContextProvider(props) {
         loggedIn: false,
         error: false,
         message: "",
-        currentPage: "weclomeScreen"
+        currentScreen: "welcomeScreen",
     });
     const history = useHistory();
 
@@ -38,16 +38,16 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
-                    currentPage: auth.currentPage,
+                    currentScreen: auth.currentScreen,
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true,
+                    loggedIn: false,
                     error: auth.error,
                     message: auth.message,
-                    currentPage: "homeScreen"
+                    currentScreen: "weclomeScreen",
                 })
             }
             // part 1
@@ -57,7 +57,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
-                    currentPage: "homeScreen"
+                    currentScreen: "homeScreen",
                 })
             }
             // part 2
@@ -67,7 +67,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     error: payload.error,
                     message: payload.message,
-                    currentPage: auth.currentPage
+                    currentScreen: auth.currentScreen,
                 })
             }
             // part 4
@@ -77,36 +77,39 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     error: auth.error,
                     message: auth.message,
-                    currentPage: "welcomeScreen"
+                    currentScreen: "welcomeScreen",
                 })
             }
 
-            // change page screen
-            case AuthActionType.CHANGE_PAGE:{
+            // change screen
+            case AuthActionType.CHANGE_SCREEN:{
                 return setAuth({
                     user: auth.user,
                     loggedIn: auth.loggedIn,
                     error: auth.error,
                     message: auth.message,
-                    currentPage: payload.page,
+                    currentScreen: payload.screen,
                 })
             }
-
 
             default:
                 return auth;
         }
     }
 
-    //change page screen depending on the navigation button
-    auth.changePage = function (screen){
+    //change screen depending on the navigation button
+    auth.changeScreen = function (screen, store){
         authReducer({
-            type: AuthActionType.CHANGE_PAGE,
+            type: AuthActionType.CHANGE_SCREEN,
             payload:{
-                page: screen,
+                screen: screen,
             }
         })
+        store.loadIdNamePairs({screen: screen})
+        console.log(store.searchCriteria);
     }
+
+
 
     // part 1
     auth.loginUser = async function (userData, store){
@@ -122,7 +125,7 @@ function AuthContextProvider(props) {
                     }
                 })
                 history.push("/");
-                store.loadIdNamePairs();
+                store.loadIdNamePairs({screen:"homeScreen"});
             }
         }catch(err){
             // part 2
@@ -204,8 +207,7 @@ function AuthContextProvider(props) {
                         user: response.data.user
                     }
                 })
-                history.push("/");
-                store.loadIdNamePairs();
+                history.push("/login/");
             }
         }catch(err){
             // part 2

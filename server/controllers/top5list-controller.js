@@ -54,12 +54,12 @@ updateTop5List = async (req, res) => {
                 })
             }
 
-            if(top5List.ownerEmail !== loggedInUser.email){
-                return res.status(400).json({ 
-                    success: false, 
-                    message: "Top 5 List not owned by the user" 
-                });
-            }
+            // if(top5List.ownerEmail !== loggedInUser.email){
+            //     return res.status(400).json({ 
+            //         success: false, 
+            //         message: "Top 5 List not owned by the user" 
+            //     });
+            // }
     
             top5List.name = body.name;
             top5List.items = body.items;
@@ -130,9 +130,9 @@ getTop5ListById = async (req, res) => {
             if (err) {
                 return res.status(400).json({ success: false, error: err });
             }
-            if(list.ownerEmail !== loggedInUser.email){
-                return res.status(400).json({ success: false, message: "Top 5 List not owned by the user" });
-            }
+            // if(list.ownerEmail !== loggedInUser.email){
+            //     return res.status(400).json({ success: false, message: "Top 5 List not owned by the user" });
+            // }
             return res.status(200).json({ success: true, top5List: list })
         }).catch(err => console.log(err))
     }catch(err){
@@ -163,43 +163,84 @@ getTop5Lists = async (req, res) => {
 // part 5
 getTop5ListPairs = async (req, res) => {
     try{
-        const loggedInUser = await User.findOne({ _id: req.userId });
-        await Top5List.find({ ownerEmail: loggedInUser.email}, (err, top5Lists) => {
-            if (err) {
-                return res.status(400).json({ success: false, error: err })
-            }
-            if (!top5Lists) {
-                console.log("!top5Lists.length");
-                return res
-                    .status(404)
-                    .json({ success: false, error: 'Top 5 Lists not found' })
-            }
-            else {
-                // PUT ALL THE LISTS INTO ID, NAME PAIRS
-                let pairs = [];
-                for (let key in top5Lists) {
-                    let list = top5Lists[key];
-                    let pair = {
-                        _id: list._id,
-                        name: list.name,
-                        items: list.items,
-                        ownerEmail: list.ownerEmail,
-                        ownerName: list.ownerName,
-                        view: list.view,
-                        like: list.like,
-                        dislike: list.dislike,
-                        likeList: list.likeList,
-                        dislikeList: list.dislikeList,
-                        comments: list.comments,
-                        hasPublished: list.hasPublished,
-                        publishDate: list.publishDate,
-                        publishDateString: list.publishDateString,
-                    };
-                    pairs.push(pair);
+        const criteria = req.query;
+        if(criteria.screen === "homeScreen"){
+            const loggedInUser = await User.findOne({ _id: req.userId });
+            await Top5List.find({ ownerEmail: loggedInUser.email}, (err, top5Lists) => {
+                if (err) {
+                    return res.status(400).json({ success: false, error: err })
                 }
-                return res.status(200).json({ success: true, idNamePairs: pairs })
-            }
-        }).catch(err => console.log(err))
+                if (!top5Lists) {
+                    console.log("!top5Lists.length");
+                    return res
+                        .status(404)
+                        .json({ success: false, error: 'Top 5 Lists not found' })
+                }
+                else {
+                    // PUT ALL THE LISTS INTO ID, NAME PAIRS
+                    let pairs = [];
+                    for (let key in top5Lists) {
+                        let list = top5Lists[key];
+                        let pair = {
+                            _id: list._id,
+                            name: list.name,
+                            items: list.items,
+                            ownerEmail: list.ownerEmail,
+                            ownerName: list.ownerName,
+                            view: list.view,
+                            like: list.like,
+                            dislike: list.dislike,
+                            likeList: list.likeList,
+                            dislikeList: list.dislikeList,
+                            comments: list.comments,
+                            hasPublished: list.hasPublished,
+                            publishDate: list.publishDate,
+                            publishDateString: list.publishDateString,
+                        };
+                        pairs.push(pair);
+                    }
+                    return res.status(200).json({ success: true, idNamePairs: pairs })
+                }
+            }).catch(err => console.log(err))
+        }
+        else if(criteria.screen === "allListScreen" || criteria.screen === "userScreen"){
+            await Top5List.find({ hasPublished: true}, (err, top5Lists) => {
+                if (err) {
+                    return res.status(400).json({ success: false, error: err })
+                }
+                if (!top5Lists) {
+                    console.log("!top5Lists.length");
+                    return res
+                        .status(404)
+                        .json({ success: false, error: 'Top 5 Lists not found' })
+                }
+                else {
+                    // PUT ALL THE LISTS INTO ID, NAME PAIRS
+                    let pairs = [];
+                    for (let key in top5Lists) {
+                        let list = top5Lists[key];
+                        let pair = {
+                            _id: list._id,
+                            name: list.name,
+                            items: list.items,
+                            ownerEmail: list.ownerEmail,
+                            ownerName: list.ownerName,
+                            view: list.view,
+                            like: list.like,
+                            dislike: list.dislike,
+                            likeList: list.likeList,
+                            dislikeList: list.dislikeList,
+                            comments: list.comments,
+                            hasPublished: list.hasPublished,
+                            publishDate: list.publishDate,
+                            publishDateString: list.publishDateString,
+                        };
+                        pairs.push(pair);
+                    }
+                    return res.status(200).json({ success: true, idNamePairs: pairs })
+                }
+            }).catch(err => console.log(err))
+        }
     }catch(err){
         console.error(err);
         res.status(500).send();
