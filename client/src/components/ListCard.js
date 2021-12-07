@@ -198,7 +198,8 @@ function ListCard(props) {
                         </Typography>
                     </Grid>
                     <Grid item md={1} mt={2}>
-                        <IconButton id = "thumb-up-button" size = "small" sx = {{ml:4}} 
+                        
+                        <IconButton disabled = {auth.guest} id = "thumb-up-button" size = "small" sx = {{ml:4}} 
                         onClick={(event) => {handleLike(event, idNamePair._id)}}>
                             <ThumbUpIcon fontSize="large" style={{color: likeColor}} />
                         </IconButton>
@@ -209,7 +210,7 @@ function ListCard(props) {
                         </Typography>
                     </Grid>
                     <Grid item md={1} mt={2}>
-                        <IconButton id = "thumb-down-button" size = "small" sx = {{ml:4}}
+                        <IconButton disabled = {auth.guest} id = "thumb-down-button" size = "small" sx = {{ml:4}}
                         onClick={(event) => {handleDislike(event, idNamePair._id)}}>
                             <ThumbDownIcon fontSize="large" style={{color: dislikeColor}}/>
                         </IconButton>
@@ -275,7 +276,7 @@ function ListCard(props) {
                             
                         </Grid>
                         <Grid item md={1} mt={2}>
-                            <IconButton id = "thumb-up-button" size = "small" sx = {{ml:5}} 
+                            <IconButton disabled = {auth.guest} id = "thumb-up-button" size = "small" sx = {{ml:5}} 
                             onClick={(event) => {handleLike(event, idNamePair._id)}}>
                                 <ThumbUpIcon fontSize="large" style={{color: likeColor}}/>
                             </IconButton>
@@ -286,7 +287,7 @@ function ListCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item md={1} mt={2}>
-                            <IconButton id = "thumb-down-button" size = "small" sx = {{ml:5}}
+                            <IconButton disabled = {auth.guest} id = "thumb-down-button" size = "small" sx = {{ml:5}}
                             onClick={(event) => {handleDislike(event, idNamePair._id)}}>
                                 <ThumbDownIcon fontSize="large" style={{color: dislikeColor}}/>
                             </IconButton>
@@ -330,6 +331,7 @@ function ListCard(props) {
                                 </List>
                             </div>
                             <TextField
+                                disabled = {auth.guest}
                                 fullWidth
                                 id="add-comment-field"
                                 name="add-comment-field"
@@ -407,7 +409,7 @@ function ListCard(props) {
                         </div>
                     </Grid>
                     <Grid item md={1} mt={2}>
-                        <IconButton id = "thumb-up-button" size = "small" sx = {{ml:4}} 
+                        <IconButton disabled = {auth.guest} id = "thumb-up-button" size = "small" sx = {{ml:4}} 
                         onClick={(event) => {handleLike(event, idNamePair._id)}}>
                             <ThumbUpIcon fontSize="large" style={{color: likeColor}} />
                         </IconButton>
@@ -418,7 +420,7 @@ function ListCard(props) {
                         </Typography>
                     </Grid>
                     <Grid item md={1} mt={2}>
-                        <IconButton id = "thumb-down-button" size = "small" sx = {{ml:4}}
+                        <IconButton disabled = {auth.guest} id = "thumb-down-button" size = "small" sx = {{ml:4}}
                         onClick={(event) => {handleDislike(event, idNamePair._id)}}>
                             <ThumbDownIcon fontSize="large" style={{color: dislikeColor}}/>
                         </IconButton>
@@ -484,7 +486,7 @@ function ListCard(props) {
                             </div>
                         </Grid>
                         <Grid item md={1} mt={2}>
-                            <IconButton id = "thumb-up-button" size = "small" sx = {{ml:5}} 
+                            <IconButton disabled = {auth.guest} id = "thumb-up-button" size = "small" sx = {{ml:5}} 
                             onClick={(event) => {handleLike(event, idNamePair._id)}}>
                                 <ThumbUpIcon fontSize="large" style={{color: likeColor}}/>
                             </IconButton>
@@ -495,7 +497,7 @@ function ListCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item md={1} mt={2}>
-                            <IconButton id = "thumb-down-button" size = "small" sx = {{ml:5}}
+                            <IconButton disabled = {auth.guest} id = "thumb-down-button" size = "small" sx = {{ml:5}}
                             onClick={(event) => {handleDislike(event, idNamePair._id)}}>
                                 <ThumbDownIcon fontSize="large" style={{color: dislikeColor}}/>
                             </IconButton>
@@ -534,6 +536,7 @@ function ListCard(props) {
                                 </List>
                             </div>
                             <TextField
+                                disabled = {auth.guest}
                                 fullWidth
                                 id="add-comment-field"
                                 name="add-comment-field"
