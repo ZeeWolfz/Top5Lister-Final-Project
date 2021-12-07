@@ -22,5 +22,6 @@ router.post('/communitylist', CommunityListController.createCommunityList)
 router.get('/communitylistpairs', CommunityListController.getCommunityListPairs)
 router.get('/communitylist/:id', CommunityListController.getCommunityListById)
 router.put('/communitylist/:id', CommunityListController.updateCommunityList)
+router.delete('/communitylist/:id', CommunityListController.deleteCommunityList)
 
 module.exports = router

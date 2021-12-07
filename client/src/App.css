@@ -110,6 +110,13 @@ body {
   flex-direction: column;
   overflow: scroll;
 }
+#comment-list-community{
+  width: 95%;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
 /* #home-button{
   color:#111111;
 }

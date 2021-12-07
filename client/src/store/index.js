@@ -365,6 +365,7 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             store.loadIdNamePairs({screen:auth.currentScreen});
             history.push("/");
+            store.updateCommunityDelete(listToDelete.name, listToDelete.items);
         }
     }
 
@@ -509,9 +510,108 @@ function GlobalStoreContextProvider(props) {
         let date = new Date();
         store.currentList.publishDate = date;
         store.currentList.publishDateString = date.toLocaleString('default', { month: 'short' })+" "+date.getDate()+", "+date.getFullYear();
-        store.createCommunityList(store.currentList.name, store.currentList.items);
+        store.updateCommunityPublish(store.currentList.name, store.currentList.items);
         store.updateCurrentList();
         store.closeCurrentList();
+    }
+
+    store.updateCommunityPublish = async function(publishListName, publishListItems){
+        try{
+            //update
+            const response = await api.getCommunityListPairs({screen:"communityScreen"});
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs;
+                let foundTarget = false;
+                let targetList = "";
+                for(let i=0; i<pairsArray.length; i++){
+                    if(pairsArray[i].name === publishListName){
+                        targetList = pairsArray[i];
+                        foundTarget = true;
+                    }
+                }
+                if(foundTarget){
+                    let id = targetList._id;
+                    let newItemScores = targetList.itemScores;
+                    for (let i = 0; i < publishListItems.length; i++){
+                        if(publishListItems[i] in newItemScores){
+                            newItemScores[publishListItems[i]] = newItemScores[publishListItems[i]]+(5-i);
+                        }
+                        else{
+                            newItemScores[publishListItems[i]] = (5-i);
+                        }
+                    }
+                    let date = new Date();
+                    
+                    targetList.itemScores = newItemScores;
+                    targetList.updateDate = date;
+                    
+                    const response = await api.updateCommunityListById(id, targetList);
+                    if (response.data.success){
+                        console.log('Done');
+                    }
+                }
+                else{
+                    store.createCommunityList(publishListName, publishListItems);
+                }
+
+
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    // update community after delete list
+    store.updateCommunityDelete = async function(deleteListName, deleteListItems){
+        try{
+            //update
+            const response = await api.getCommunityListPairs({screen:"communityScreen"});
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs;
+                let foundTarget = false;
+                let targetList = "";
+                for(let i=0; i<pairsArray.length; i++){
+                    if(pairsArray[i].name === deleteListName){
+                        targetList = pairsArray[i];
+                        foundTarget = true;
+                    }
+                }
+                if(foundTarget){
+                    let id = targetList._id;
+                    let newItemScores = targetList.itemScores;
+                    for (let i = 0; i < deleteListItems.length; i++){
+                        if(deleteListItems[i] in newItemScores){
+                            newItemScores[deleteListItems[i]] = newItemScores[deleteListItems[i]]-(5-i);
+
+                            if(newItemScores[deleteListItems[i]] === 0){
+                                delete newItemScores[deleteListItems[i]];
+                            }
+                        }
+                    }
+                    if( Object.keys(newItemScores).length < 1){
+                        const response = await api.deleteCommunityListById(id, targetList);
+                        if (response.data.success){
+                            console.log('Done');
+                        }
+                    }
+                    else{
+                        let date = new Date();
+                        
+                        targetList.itemScores = newItemScores;
+                        targetList.updateDate = date;
+                        
+                        const response = await api.updateCommunityListById(id, targetList);
+                        if (response.data.success){
+                            console.log('Done');
+                        }
+                    }
+                }
+
+
+            }
+        }catch(err){
+            console.log(err);
+        }
     }
 
     //post comment

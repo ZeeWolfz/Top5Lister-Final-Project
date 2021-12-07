@@ -18,6 +18,7 @@ import Statusbar from "./Statusbar";
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     const [wantPublish, setWantPublish] = useState(false);
+    const [allowPublish, setAllowPublish] = useState(false);
 
     useEffect(() => {
         let url = window.location.href;
@@ -36,8 +37,8 @@ function WorkspaceScreen() {
         let item4 = formData.get('item-4-name');
         let item5 = formData.get('item-5-name');
 
-        if(wantPublish){
-            store.publishList(listName, item1, item2, item3, item4, item5)
+        if(wantPublish && allowPublish){
+            store.publishList(listName, item1, item2, item3, item4, item5);
         }
         else{
             store.saveWorkspace(listName, item1, item2, item3, item4, item5);
@@ -54,6 +55,41 @@ function WorkspaceScreen() {
         setWantPublish(newPublish);
     }
 
+
+    function checkAllowPublish(event){
+        event.preventDefault();
+        let listname = document.getElementById('list-name').value;
+        let item1 = document.getElementById('item-1-name').value;
+        let item2 = document.getElementById('item-2-name').value;
+        let item3 = document.getElementById('item-3-name').value;
+        let item4 = document.getElementById('item-4-name').value;
+        let item5 = document.getElementById('item-5-name').value;
+        let samePublishedLists = store.idNamePairs.filter(pair => pair.name.toUpperCase()===listname.toUpperCase() && pair.hasPublished);
+        console.log(samePublishedLists);
+        console.log(store.idNamePairs);
+        console.log(samePublishedLists.length1);
+
+        if(listname==='' || item1==='' || item2==='' || item3==='' || item4==='' || item5===''){
+            setAllowPublish(false);
+        } 
+        else if(item1===item2 || item1===item3 || item1===item4 || item1===item5 || item2===item3  || 
+            item2===item4 || item2===item5 || item3===item4|| item3===item5|| item4===item5){
+                setAllowPublish(false);
+            }
+        else if(samePublishedLists.length > 0 ){
+            setAllowPublish(false);
+        }
+        else{
+            setAllowPublish(true);
+        }
+    }
+    // let clistname = document.getElementById('list-name');
+    // let citem1 = document.getElementById('item-1-name');
+    // let citem2 = document.getElementById('item-2-name');
+    // let citem3 = document.getElementById('item-3-name');
+    // let citem4 = document.getElementById('item-4-name');
+    // let citem5 = document.getElementById('item-5-name');
+
     let listForm = "";
     if (store.currentList) {
         listForm =
@@ -65,6 +101,7 @@ function WorkspaceScreen() {
                         id="list-name"
                         size="small"
                         autoFocus
+                        onChange= {(event)=>(checkAllowPublish(event))}
                         defaultValue={store.currentList.name}
                         inputProps = {{style:{fontSize:20, fontWeight: "bold"}}}
                         sx = {{width: '40%', left: '5%', border:2, borderRadius:3, bgcolor:'#FFFFFF'}}
@@ -80,6 +117,7 @@ function WorkspaceScreen() {
                                     id="item-1-name"
                                     name="item-1-name"
                                     size="small"
+                                    onChange= {(event)=>(checkAllowPublish(event))}
                                     defaultValue = {store.currentList.items[0]}
                                     inputProps = {{style:{fontSize: 20, fontWeight: "bold"}}}
                                     sx = {{border:3, borderRadius:3, bgcolor:'#D4AF37'}}
@@ -94,6 +132,7 @@ function WorkspaceScreen() {
                                     id="item-2-name"
                                     name="item-2-name"
                                     size="small"
+                                    onChange= {(event)=>(checkAllowPublish(event))}
                                     defaultValue = {store.currentList.items[1]}
                                     inputProps = {{style:{fontSize:20, fontWeight: "bold"}}}
                                     sx = {{border:3, borderRadius:3, bgcolor:'#D4AF37'}}
@@ -108,6 +147,7 @@ function WorkspaceScreen() {
                                     id="item-3-name"
                                     name="item-3-name"
                                     size="small"
+                                    onChange= {(event)=>(checkAllowPublish(event))}
                                     defaultValue = {store.currentList.items[2]}
                                     inputProps = {{style:{fontSize:20, fontWeight: "bold"}}}
                                     sx = {{border:3, borderRadius:3, bgcolor:'#D4AF37'}}
@@ -122,6 +162,7 @@ function WorkspaceScreen() {
                                     id="item-4-name"
                                     name="item-4-name"
                                     size="small"
+                                    onChange= {(event)=>(checkAllowPublish(event))}
                                     defaultValue = {store.currentList.items[3]}
                                     inputProps = {{style:{fontSize:20, fontWeight: "bold"}}}
                                     sx = {{border:3, borderRadius:3, bgcolor:'#D4AF37'}}
@@ -136,6 +177,7 @@ function WorkspaceScreen() {
                                     id="item-5-name"
                                     name="item-5-name"
                                     size="small"
+                                    onChange= {(event)=>(checkAllowPublish(event))}
                                     defaultValue = {store.currentList.items[4]}
                                     inputProps = {{style:{fontSize:20, fontWeight: "bold"}}}
                                     sx = {{border:3, borderRadius:3, bgcolor:'#D4AF37'}}
@@ -150,18 +192,21 @@ function WorkspaceScreen() {
                             fullWidth
                             variant="contained"
                             sx={{ my: 3, mx: 3}}
-                            style={{maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"#111111"}}
+                            style={{maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"black"}}
                         >
                             Save
                         </Button>
                         <Button
+                            disabled = {!allowPublish}
                             type="submit"
                             id='publish-button'
                             fullWidth
                             variant="contained"
                             onClick={handleTogglePublish}
                             sx={{ my: 3, mx: 1 }}
-                            style={{maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"#111111"}}
+                            style={(allowPublish)?
+                                {maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"black"}:
+                                {maxWidth:'120px', minWidth:'120px', fontWeight:'bold', fontSize: 15, color:"gray"}}
                         >
                             Publish
                         </Button>

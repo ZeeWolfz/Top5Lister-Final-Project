@@ -37,7 +37,7 @@ export const logoutUser = () => api.get(`/logout/`)
 export const createCommunityList = (payload) => api.post(`/communitylist/`, payload)
 export const getCommunityListPairs = (query) => api.get(`/communitylistpairs/`, {params:query})
 export const getCommunityListById = (id) => api.get(`/communitylist/${id}`)
-
+export const deleteCommunityListById = (id) => api.delete(`/communitylist/${id}`)
 export const updateCommunityListById = (id, payload) => api.put(`/communitylist/${id}`, payload)
 
 const apis = {
@@ -57,6 +57,7 @@ const apis = {
     getCommunityListPairs,
     getCommunityListById,
     updateCommunityListById,
+    deleteCommunityListById,
 }
 
 export default apis

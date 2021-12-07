@@ -61,7 +61,7 @@ function ListCard(props) {
 
     function handleLike(event, id){
         event.stopPropagation();
-        if(auth.login){
+        if(auth.loggedIn){
             if(idNamePair.likeList.indexOf(auth.user.email) === -1 && idNamePair.dislikeList.indexOf(auth.user.email) === -1){
                 store.likeList(id);
             }
@@ -77,7 +77,8 @@ function ListCard(props) {
 
     function handleDislike(event, id){
         event.stopPropagation();
-        if(auth.login){
+        if(auth.loggedIn){
+            console.log("DISLIKE HERE")
             if(idNamePair.likeList.indexOf(auth.user.email) === -1 && idNamePair.dislikeList.indexOf(auth.user.email) === -1){
                 store.dislikeList(id);
             }
@@ -110,13 +111,13 @@ function ListCard(props) {
     // }
 
     let likeColor = "black";
-    if(auth.login){
+    if(auth.loggedIn){
         if(idNamePair.likeList.indexOf(auth.user.email) > -1){
             likeColor = "red";
         }
     }
     let dislikeColor = "black";
-    if(auth.login){
+    if(auth.loggedIn){
         if(idNamePair.dislikeList.indexOf(auth.user.email) > -1){
             dislikeColor = "red";
         }
@@ -315,7 +316,7 @@ function ListCard(props) {
                         </Grid>
 
                         <Grid item md={6}>
-                            <div id="comment-list">
+                            <div id="comment-list-community">
                                 <List>
                                 {
                                     idNamePair.comments.map((comment) => (

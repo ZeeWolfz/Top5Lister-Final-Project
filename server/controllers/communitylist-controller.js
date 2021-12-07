@@ -99,6 +99,33 @@ updateCommunityList = async (req, res) => {
     }
 }
 
+//Delete
+deleteCommunityList = async (req, res) => {
+    try{
+        //const loggedInUser = await User.findOne({ _id: req.userId });
+        CommunityList.findById({ _id: req.params.id }, (err, communityList) => {
+            if (err) {
+                return res.status(404).json({
+                    err,
+                    message: 'Comunity List not found!',
+                })
+            }
+            // if(top5List.ownerEmail !== loggedInUser.email){
+            //     return res.status(400).json({ 
+            //         success: false, 
+            //         message: "Top 5 List not owned by the user" 
+            //     });
+            // }
+            CommunityList.findOneAndDelete({ _id: req.params.id }, () => {
+                return res.status(200).json({ success: true, data: communityList })
+            }).catch(err => console.log(err))
+        })
+    }catch(err){
+        console.error(err);
+        res.status(500).send();
+    }
+}
+
 //Get by Id
 getCommunityListById = async (req, res) => {
     try{
@@ -170,4 +197,5 @@ module.exports = {
     getCommunityListPairs,
     getCommunityListById,
     updateCommunityList,
+    deleteCommunityList,
 }
