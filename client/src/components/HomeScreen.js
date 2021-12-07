@@ -94,7 +94,7 @@ const HomeScreen = () => {
     }
     else if (auth.currentScreen==="allListScreen"){
         if(store.searchCriteria===""){
-            const filteredPairs = store.idNamePairs;
+            let filteredPairs = store.idNamePairs;
             listCard = 
                 <List sx={{ width: '90%', left: '5%', bgcolor: '#C4C4C4'}}>
                 {

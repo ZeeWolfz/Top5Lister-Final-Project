@@ -32,6 +32,7 @@ function NavigationBar() {
         event.preventDefault();
         auth.changeScreen(screen, store);
         store.loadIdNamePairs({screen:screen})
+        console.log(store.loadIdNamePairs)
     }
 
     function handleSearch(event){

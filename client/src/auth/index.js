@@ -80,8 +80,8 @@ function AuthContextProvider(props) {
             // part 4
             case AuthActionType.LOGOUT_USER:{
                 return setAuth({
-                    user: payload.user,
-                    loggedIn: payload.loggedIn,
+                    user: null,
+                    loggedIn: false,
                     error: auth.error,
                     message: auth.message,
                     guest: false,
@@ -92,7 +92,7 @@ function AuthContextProvider(props) {
             //
             case AuthActionType.CONTINUE_AS_GUEST:{
                 return setAuth({
-                    user: auth.user,
+                    user: null,
                     loggedIn: false,
                     error: auth.error,
                     message: auth.message,
@@ -103,7 +103,7 @@ function AuthContextProvider(props) {
 
             case AuthActionType.EXIST_GUEST:{
                 return setAuth({
-                    user: auth.user,
+                    user: null,
                     loggedIn: false,
                     error: auth.error,
                     message: auth.message,

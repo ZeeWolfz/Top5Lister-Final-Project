@@ -524,7 +524,7 @@ function GlobalStoreContextProvider(props) {
                 let foundTarget = false;
                 let targetList = "";
                 for(let i=0; i<pairsArray.length; i++){
-                    if(pairsArray[i].name === publishListName){
+                    if(pairsArray[i].name.toUpperCase() === publishListName.toUpperCase()){
                         targetList = pairsArray[i];
                         foundTarget = true;
                     }
@@ -571,7 +571,7 @@ function GlobalStoreContextProvider(props) {
                 let foundTarget = false;
                 let targetList = "";
                 for(let i=0; i<pairsArray.length; i++){
-                    if(pairsArray[i].name === deleteListName){
+                    if(pairsArray[i].name.toUpperCase() === deleteListName.toUpperCase()){
                         targetList = pairsArray[i];
                         foundTarget = true;
                     }

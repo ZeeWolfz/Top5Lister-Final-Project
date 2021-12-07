@@ -37,6 +37,11 @@ export default function AppBanner() {
         auth.existGuest();
     }
 
+    const handleGuest = () =>{
+        handleMenuClose();
+        auth.continueAsGuest(store);
+    }
+
     const menuId = 'primary-search-account-menu';
     const guestMenu = (
         <Menu
@@ -78,7 +83,7 @@ export default function AppBanner() {
         >
             <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
-            <MenuItem onClick={handleMenuClose}><Link to='/'>Continue as Guest</Link></MenuItem>
+            <MenuItem onClick={handleGuest}><Link to='/'>Continue as Guest</Link></MenuItem>
         </Menu>
     );
     const loggedInMenu = 
